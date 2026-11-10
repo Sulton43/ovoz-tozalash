@@ -7,8 +7,8 @@ from django.http import HttpResponse
 
 def home_view(request):
     # 1. Agar foydalanuvchi "Tozalash" tugmasini bosib, fayl yuborgan bo'lsa (POST so'rov):
-    if request.method == 'POST' and request.FILES.get('audio_fayl'):
-        uploaded_file = request.FILES['audio_fayl']
+    if request.method == 'POST' and request.FILES.get('audio_file'):
+        uploaded_file = request.FILES['audio_file']
         
         # 2. Yuklangan audioni librosa orqali o'qib olamiz
         data, rate = librosa.load(uploaded_file, sr=None)
