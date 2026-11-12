@@ -2,3 +2,5 @@ myvenv/
 db.sqlite3
 __pycache__/
 media/
+*.wav
+variantlar/
