@@ -2,6 +2,7 @@ from pathlib import Path
 
 from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from .cleaning import clean_audio
 from .forms import RecordingForm
@@ -37,3 +38,12 @@ def result_view(request, pk):
 def recordings_view(request):
     recordings = Recording.objects.order_by("-uploaded_at")
     return render(request, "main/recordings.html", {"recordings": recordings})
+
+
+@require_POST
+def delete_view(request, pk):
+    recording = get_object_or_404(Recording, pk=pk)
+    recording.original.delete(save=False)  # faylni diskdan o'chiradi
+    recording.cleaned.delete(save=False)
+    recording.delete()                     # yozuvni bazadan o'chiradi
+    return redirect("recordings")

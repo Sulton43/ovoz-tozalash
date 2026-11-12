@@ -16,6 +16,12 @@
                     {{ recording.uploaded_at|date:"d.m.Y H:i" }}
                     {{ recording.display_name }}
                     <a href="{% url 'result' recording.pk %}">Ko'rish</a>
+                    <form method="POST" action="{% url 'delete' recording.pk %}"
+                        style="display:inline"
+                        onsubmit="return confirm('Yozuv butunlay o\'chiriladi. Davom etasizmi?');">
+                        {% csrf_token %}
+                        <button type="submit">O'chirish</button>
+                    </form>
                 </li>
             {% endfor %}
         </ul>
