@@ -1,30 +1,34 @@
-import io
-import librosa
-import noisereduce as nr
-import soundfile as sf
-from django.shortcuts import render
-from django.http import HttpResponse
+from pathlib import Path
+
+from django.conf import settings
+from django.shortcuts import get_object_or_404, redirect, render
+
+from .cleaning import clean_audio
+from .forms import RecordingForm
+from .models import Recording
+
 
 def home_view(request):
-    # 1. Agar foydalanuvchi "Tozalash" tugmasini bosib, fayl yuborgan bo'lsa (POST so'rov):
-    if request.method == 'POST' and request.FILES.get('audio_file'):
-        uploaded_file = request.FILES['audio_file']
-        
-        # 2. Yuklangan audioni librosa orqali o'qib olamiz
-        data, rate = librosa.load(uploaded_file, sr=None)
-        
-        # 3. Shovqinni tozalaymiz (prop_decrease=0.8 shovqinni 80% ga pasaytiradi)
-        reduced_noise = nr.reduce_noise(y=data, sr=rate, prop_decrease=0.8)
-        
-        # 4. Tozalangan ovozni kompyuter xotirasiga (buferga) WAV formatda yozamiz
-        buffer = io.BytesIO()
-        sf.write(buffer, reduced_noise, rate, format='WAV')
-        buffer.seek(0)
-        
-        # 5. Tayyor faylni brauzerga yuklab olish uchun qaytarib beramiz
-        response = HttpResponse(buffer.read(), content_type='audio/wav')
-        response['Content-Disposition'] = f'attachment; filename="tozalangan_{uploaded_file.name}.wav"'
-        return response
+    if request.method == "POST":
+        form = RecordingForm(request.POST, request.FILES)
+        if form.is_valid():
+            recording = form.save()  # original saqlandi
 
-    # Agar foydalanuvchi sahifaga shunchaki kirgan bo'lsa (GET so'rov), formani ko'rsatamiz:
-    return render(request, 'main/index.html')   
+            input_path = Path(recording.original.path)
+            output_name = f"{input_path.stem}_cleaned.wav"
+            output_path = Path(settings.MEDIA_ROOT) / "cleaned" / output_name
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+
+            clean_audio(input_path, output_path)
+
+            recording.cleaned.name = f"cleaned/{output_name}"
+            recording.save()
+            return redirect("result", pk=recording.pk)
+    else:
+        form = RecordingForm()
+    return render(request, "main/index.html", {"form": form})
+
+
+def result_view(request, pk):
+    recording = get_object_or_404(Recording, pk=pk)
+    return render(request, "main/result.html", {"recording": recording})

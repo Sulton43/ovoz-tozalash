@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natija</title>
+</head>
+<body style="font-family: sans-serif; max-width: 500px; margin: 50px auto;">
+    <h2>Natija</h2>
+
+    <h3>Asl yozuv</h3>
+    <audio controls src="{{ recording.original.url }}"></audio>
+
+    <h3>Tozalangan yozuv</h3>
+    <audio controls src="{{ recording.cleaned.url }}"></audio>
+    <p><a href="{{ recording.cleaned.url }}" download>Tozalangan faylni yuklab olish</a></p>
+
+    <p><a href="{% url 'home' %}">Yana yuklash</a></p>
+</body>
+</html>
