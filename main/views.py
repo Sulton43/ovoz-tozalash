@@ -32,3 +32,8 @@ def home_view(request):
 def result_view(request, pk):
     recording = get_object_or_404(Recording, pk=pk)
     return render(request, "main/result.html", {"recording": recording})
+
+
+def recordings_view(request):
+    recordings = Recording.objects.order_by("-uploaded_at")
+    return render(request, "main/recordings.html", {"recordings": recordings})

@@ -11,10 +11,18 @@
     <h3>Asl yozuv</h3>
     <audio controls src="{{ recording.original.url }}"></audio>
 
-    <h3>Tozalangan yozuv</h3>
-    <audio controls src="{{ recording.cleaned.url }}"></audio>
-    <p><a href="{{ recording.cleaned.url }}" download>Tozalangan faylni yuklab olish</a></p>
+   {% if recording.cleaned %}
+        <h3>Tozalangan yozuv</h3>
+        <audio controls src="{{ recording.cleaned.url }}"></audio>
+        <p><a href="{{ recording.cleaned.url }}" download>Tozalangan faylni yuklab olish</a></p>
+    {% else %}
+        <p>Bu yozuv tozalanmagan.</p>
+    {% endif %}
+    
+    <p><a href="{% url 'recordings' %}">Barcha yozuvlar</a></p>
 
     <p><a href="{% url 'home' %}">Yana yuklash</a></p>
+
+
 </body>
 </html>

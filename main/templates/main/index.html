@@ -7,6 +7,7 @@
 </head>
 <body style="font-family: sans-serif; max-width: 500px; margin: 50px auto;">
     <h2>Ovozdagi shovqinni tozalash</h2>
+    <p><a href="{% url 'recordings' %}">Yozuvlarim</a></p>
     <p>Audio faylni yuklang:</p>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}

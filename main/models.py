@@ -1,3 +1,4 @@
+import os
 from django.db import models
 
 
@@ -8,3 +9,7 @@ class Recording(models.Model):
 
     def __str__(self):
         return self.original.name
+
+    @property
+    def display_name(self):
+        return os.path.basename(self.original.name)

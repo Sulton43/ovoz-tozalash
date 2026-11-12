@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yozuvlarim</title>
+</head>
+<body style="font-family: sans-serif; max-width: 600px; margin: 50px auto;">
+    <h2>Yozuvlarim</h2>
+    <p><a href="{% url 'home' %}">Yangi yozuv yuklash</a></p>
+
+    {% if recordings %}
+        <ul>
+            {% for recording in recordings %}
+                <li>
+                    {{ recording.uploaded_at|date:"d.m.Y H:i" }}
+                    {{ recording.display_name }}
+                    <a href="{% url 'result' recording.pk %}">Ko'rish</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Hali yozuv yo'q.</p>
+    {% endif %}
+</body>
+</html>
